@@ -1,0 +1,5 @@
+# Credentials (WiFi, broker): never commit
+firmware/include/secrets.h
+
+# Editor
+.vscode/
