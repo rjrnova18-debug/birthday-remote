@@ -4,3 +4,5 @@
 // secrets.h is ignored by git, so your credentials never reach GitHub.
 constexpr char WIFI_SSID[] = "your-wifi-name";
 constexpr char WIFI_PASSWORD[] = "your-wifi-password";
+
+constexpr char MQTT_TOPIC_LED[] = "your-unique-topic/led";
