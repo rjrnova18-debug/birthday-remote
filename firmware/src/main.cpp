@@ -66,9 +66,10 @@ void connectToMqtt()
     Serial.print("Connecting to MQTT...");
     String clientId = "birthday-remote-" + String(random(0xffff), HEX);
 
-    if (mqttClient.connect(clientId.c_str()))
+    if (mqttClient.connect(clientId.c_str(), nullptr, nullptr, MQTT_TOPIC_STATUS, 0, true, "offline"))
     {
       Serial.println(" connected");
+      mqttClient.publish(MQTT_TOPIC_STATUS, "online", true);
       mqttClient.subscribe(MQTT_TOPIC_LED);
       publishLedState();
     }
