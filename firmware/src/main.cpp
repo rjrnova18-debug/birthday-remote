@@ -70,6 +70,7 @@ void connectToMqtt()
     {
       Serial.println(" connected");
       mqttClient.subscribe(MQTT_TOPIC_LED);
+      publishLedState();
     }
     else
     {
