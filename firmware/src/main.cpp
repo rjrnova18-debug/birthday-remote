@@ -55,7 +55,7 @@ void onMessage(char *topic, byte *payload, unsigned int length)
   }
   else if (message == "OFF")
   {
-    setLed(true);
+    setLed(false);
   }
 }
 
