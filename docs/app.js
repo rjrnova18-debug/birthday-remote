@@ -1,4 +1,4 @@
-// Birthday Remote: toggles the ESP32 LED over MQTT.
+// Birthday Remote: toggles the ESP32 LED over MQTT and mirrors its real state.
 // The secret part of the topic is NOT stored in this file. It comes from the
 // link (?t=your-secret), so it never ends up in the public repository.
 
@@ -7,7 +7,9 @@ const BROKER_URL = "wss://broker.hivemq.com:8884/mqtt";
 const button = document.getElementById("toggle-button");
 const topicKey = new URLSearchParams(window.location.search).get("t");
 const ledTopic = `${topicKey}/led`;
+const stateTopic = `${topicKey}/state`;
 
+// Real state of the LED, as announced by the ESP32 (never guessed by the page).
 let ledIsOn = false;
 
 // The button always shows the action it will perform next.
@@ -18,8 +20,10 @@ function updateButton() {
 function startClient() {
   const client = mqtt.connect(BROKER_URL, { reconnectPeriod: 3000 });
 
-  // Enable the button only while we are connected to the broker.
+  // Subscribe on every (re)connection. The broker immediately delivers the
+  // retained message, so the page learns the current state on load.
   client.on("connect", () => {
+    client.subscribe(stateTopic);
     button.disabled = false;
   });
   client.on("close", () => {
@@ -29,11 +33,17 @@ function startClient() {
     console.error("MQTT error:", error);
   });
 
-  button.addEventListener("click", () => {
-    const command = ledIsOn ? "OFF" : "ON";
-    client.publish(ledTopic, command);
-    ledIsOn = !ledIsOn;
+  client.on("message", (topic, payload) => {
+    if (topic !== stateTopic) {
+      return;
+    }
+    ledIsOn = payload.toString() === "ON";
     updateButton();
+  });
+
+  // Send the command only. The label changes when the ESP32 confirms it.
+  button.addEventListener("click", () => {
+    client.publish(ledTopic, ledIsOn ? "OFF" : "ON");
   });
 }
 
