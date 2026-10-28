@@ -9,6 +9,7 @@ constexpr uint8_t LED_PIN = LED_BUILTIN;
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
+bool ledIsOn = false;
 
 void connectToWiFi()
 {
@@ -27,6 +28,18 @@ void connectToWiFi()
   Serial.println(WiFi.localIP());
 }
 
+void publishLedState()
+{
+  mqttClient.publish(MQTT_TOPIC_STATE, ledIsOn ? "ON" : "OFF", true);
+}
+
+void setLed(bool turnOn)
+{
+  ledIsOn = turnOn;
+  digitalWrite(LED_PIN, ledIsOn ? HIGH : LOW);
+  publishLedState();
+}
+
 void onMessage(char *topic, byte *payload, unsigned int length)
 {
   String message;
@@ -38,11 +51,11 @@ void onMessage(char *topic, byte *payload, unsigned int length)
 
   if (message == "ON")
   {
-    digitalWrite(LED_PIN, HIGH);
+    setLed(true);
   }
   else if (message == "OFF")
   {
-    digitalWrite(LED_PIN, LOW);
+    setLed(true);
   }
 }
 

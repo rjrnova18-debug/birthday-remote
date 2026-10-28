@@ -6,3 +6,4 @@ constexpr char WIFI_SSID[] = "your-wifi-name";
 constexpr char WIFI_PASSWORD[] = "your-wifi-password";
 
 constexpr char MQTT_TOPIC_LED[] = "your-unique-topic/led";
+constexpr char MQTT_TOPIC_STATE[] = "your-unique-topic/state";
