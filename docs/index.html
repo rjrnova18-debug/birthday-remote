@@ -107,56 +107,169 @@
       </div>
     </section>
 
-    <section class="scene scene--paper" data-scene="celebration" hidden>
-      <p class="scene-label">4 · Celebración</p>
-      <p>Para <span data-friend-name></span></p>
-      <button class="next-button" type="button">Siguiente</button>
-    </section>
+    <section class="scene celebration" data-scene="celebration" hidden>
+      <div class="stripe stripe--top">
+        <p class="celebration-for">Para <span data-friend-name></span></p>
+      </div>
+      <svg class="bunting bunting--left" viewBox="0 0 380 180" aria-hidden="true">
+        <path d="M-10 20 Q170 90 360 10" stroke="#5B4C5E" stroke-width="2.5" fill="none"></path>
+        <path d="M11 35 L55 35 L33 93 Z" fill="#F7A8C4"></path>
+        <path d="M77 48 L121 48 L99 106 Z" fill="#FFC56E"></path>
+        <path d="M150 52 L194 52 L172 110 Z" fill="#8FD3EA"></path>
+        <path d="M225 44 L269 44 L247 102 Z" fill="#F7A8C4"></path>
+        <path d="M292 27 L336 27 L314 85 Z" fill="#B9E28C"></path>
+      </svg>
+      <svg class="bunting bunting--right" viewBox="0 0 380 180" aria-hidden="true">
+        <path d="M-10 20 Q170 90 360 10" stroke="#5B4C5E" stroke-width="2.5" fill="none"></path>
+        <path d="M11 35 L55 35 L33 93 Z" fill="#8FD3EA"></path>
+        <path d="M77 48 L121 48 L99 106 Z" fill="#F7A8C4"></path>
+        <path d="M150 52 L194 52 L172 110 Z" fill="#FFC56E"></path>
+        <path d="M225 44 L269 44 L247 102 Z" fill="#B9E28C"></path>
+        <path d="M292 27 L336 27 L314 85 Z" fill="#F7A8C4"></path>
+      </svg>
 
-        <section class="scene scene--paper" data-scene="card" hidden>
-      <div class="card-layout">
-        <img class="sticker" data-gif="sticker" alt="">
-
-        <!-- Only one panel is visible at a time; app.js decides which one. -->
-        <div class="card" aria-live="polite">
-          <div data-card="idle">
-            <p class="card-eyebrow">Una última sorpresa</p>
-            <h2 class="card-title">Tu regalo está listo</h2>
-            <p class="card-text">Presiona el botón y espera la cuenta regresiva.</p>
-            <button id="activate-button" class="primary-button" type="button" disabled>Conectando...</button>
+      <div class="celebration-body">
+        <div class="celebration-center">
+          <div class="greetings">
+            <h1 class="greeting greeting--en" lang="en">Happy Birthday!</h1>
+            <p class="greeting greeting--es">¡Feliz cumpleaños!</p>
+            <p class="greeting greeting--de" lang="de">Alles Gute zum Geburtstag!</p>
           </div>
 
-          <div data-card="counting" hidden>
-            <p class="card-text">Encendiendo en…</p>
-            <div class="ring">
-              <svg viewBox="0 0 220 220" aria-hidden="true">
-                <circle class="ring-track" cx="110" cy="110" r="96"></circle>
-                <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="96"></circle>
-              </svg>
-              <p class="ring-number" id="count-number">5</p>
+          <svg class="cake" viewBox="0 0 400 450" role="img" aria-label="Pastel rosado de dos pisos con una vela de chispas">
+            <defs>
+              <radialGradient id="spark-glow-fill">
+                <stop offset="0" stop-color="#FFE9A8" stop-opacity="0.95"></stop>
+                <stop offset="1" stop-color="#FFE9A8" stop-opacity="0"></stop>
+              </radialGradient>
+            </defs>
+            <ellipse cx="200" cy="406" rx="190" ry="16" fill="#E3EEF3" stroke="#C3D6DE" stroke-width="2"></ellipse>
+            <rect x="40" y="272" width="320" height="132" rx="20" fill="#F49BBE"></rect>
+            <path d="M40 274 H360 V292 q-16 20 -32 0 q-16 14 -32 0 q-16 26 -32 0 q-16 18 -32 0 q-16 22 -32 0 q-16 15 -32 0 q-16 24 -32 0 q-16 17 -32 0 q-16 21 -32 0 q-16 16 -32 0 Z" fill="#FFF0F5"></path>
+            <ellipse cx="200" cy="274" rx="160" ry="20" fill="#FFF6F9"></ellipse>
+            <path d="M52 362 q18.5 -14 37 0 t37 0 t37 0 t37 0 t37 0 t37 0 t37 0 t37 0" stroke="#FFD25E" stroke-width="5" fill="none" stroke-linecap="round"></path>
+            <rect x="70" y="330" width="12" height="4" rx="2" fill="#2F9FCB" transform="rotate(30 76 332)"></rect>
+            <rect x="120" y="318" width="12" height="4" rx="2" fill="#FFFFFF" transform="rotate(-20 126 320)"></rect>
+            <rect x="186" y="334" width="12" height="4" rx="2" fill="#7BBF5A" transform="rotate(50 192 336)"></rect>
+            <rect x="250" y="320" width="12" height="4" rx="2" fill="#FFB547" transform="rotate(-40 256 322)"></rect>
+            <rect x="312" y="336" width="12" height="4" rx="2" fill="#A77BE0" transform="rotate(15 318 338)"></rect>
+            <rect x="96" y="384" width="12" height="4" rx="2" fill="#FFFFFF" transform="rotate(-30 102 386)"></rect>
+            <rect x="290" y="382" width="12" height="4" rx="2" fill="#2F9FCB" transform="rotate(40 296 384)"></rect>
+            <rect x="90" y="188" width="220" height="88" rx="16" fill="#F7A8C4"></rect>
+            <path d="M90 190 H310 V206 q-13.75 18 -27.5 0 q-13.75 24 -27.5 0 q-13.75 14 -27.5 0 q-13.75 22 -27.5 0 q-13.75 16 -27.5 0 q-13.75 26 -27.5 0 q-13.75 15 -27.5 0 q-13.75 20 -27.5 0 Z" fill="#FFF0F5"></path>
+            <ellipse cx="200" cy="190" rx="110" ry="16" fill="#FFF6F9"></ellipse>
+            <rect x="118" y="244" width="11" height="4" rx="2" fill="#FFB547" transform="rotate(25 124 246)"></rect>
+            <rect x="168" y="254" width="11" height="4" rx="2" fill="#2F9FCB" transform="rotate(-35 174 256)"></rect>
+            <rect x="232" y="246" width="11" height="4" rx="2" fill="#7BBF5A" transform="rotate(60 238 248)"></rect>
+            <rect x="274" y="258" width="11" height="4" rx="2" fill="#FFFFFF" transform="rotate(-15 280 260)"></rect>
+            <circle class="spark-glow" cx="200" cy="138" r="54" fill="url(#spark-glow-fill)"></circle>
+            <g stroke-width="3" stroke-linecap="round" fill="none">
+              <path class="spark-a" d="M200 138 L126 86" stroke="#FFB238"></path>
+              <path class="spark-a" d="M200 138 L145 20" stroke="#FFD447"></path>
+              <path class="spark-a" d="M200 138 L200 2" stroke="#FFE88A"></path>
+              <path class="spark-a" d="M200 138 L256 18" stroke="#FFD447"></path>
+              <path class="spark-a" d="M200 138 L278 84" stroke="#FFB238"></path>
+              <path class="spark-a" d="M200 138 Q150 60 108 130" stroke="#FF8A2E"></path>
+              <path class="spark-b" d="M200 138 L123 46" stroke="#FFD447"></path>
+              <path class="spark-b" d="M200 138 L174 14" stroke="#FFE88A"></path>
+              <path class="spark-b" d="M200 138 L226 14" stroke="#FFE88A"></path>
+              <path class="spark-b" d="M200 138 L277 46" stroke="#FFD447"></path>
+              <path class="spark-b" d="M200 138 Q250 60 292 130" stroke="#FF8A2E"></path>
+            </g>
+            <circle class="spark-dot" cx="150" cy="60" r="3" fill="#FFE88A"></circle>
+            <circle class="spark-dot" cx="240" cy="40" r="2.5" fill="#FFB238" style="animation-delay: .3s"></circle>
+            <circle class="spark-dot" cx="118" cy="108" r="2.5" fill="#FF8A2E" style="animation-delay: .5s"></circle>
+            <circle class="spark-dot" cx="286" cy="104" r="2.5" fill="#FFD447" style="animation-delay: .2s"></circle>
+            <circle class="spark-dot" cx="206" cy="28" r="3" fill="#FFE88A" style="animation-delay: .6s"></circle>
+            <circle class="spark-dot" cx="98" cy="68" r="2" fill="#FFD447" style="animation-delay: .4s"></circle>
+            <circle class="spark-dot" cx="302" cy="64" r="2" fill="#FFB238" style="animation-delay: .7s"></circle>
+            <rect x="188" y="138" width="24" height="56" rx="4" fill="#8E99A6"></rect>
+            <path d="M188 152 L212 146 M188 168 L212 162 M188 184 L212 178" stroke="#C5CDD5" stroke-width="3"></path>
+            <ellipse cx="200" cy="138" rx="12" ry="4" fill="#5F6B78"></ellipse>
+            <circle cx="200" cy="135" r="6" fill="#FFF8D6"></circle>
+          </svg>
+        </div>
+
+        <img class="celebration-gif celebration-gif--left" data-gif="dance" alt="Pingüino bailando">
+        <img class="celebration-gif celebration-gif--right" data-gif="birthday" alt="Animación de feliz cumpleaños">
+      </div>
+
+      <svg class="balloons balloons--left" viewBox="0 0 230 260" aria-hidden="true">
+        <path d="M70 154 Q58 205 112 256" stroke="#8A96A3" stroke-width="2" fill="none"></path>
+        <path d="M118 136 Q126 200 112 256" stroke="#8A96A3" stroke-width="2" fill="none"></path>
+        <path d="M166 162 Q164 210 112 256" stroke="#8A96A3" stroke-width="2" fill="none"></path>
+        <ellipse cx="70" cy="92" rx="44" ry="54" fill="#EF3E4A"></ellipse>
+        <path d="M63 154 L77 154 L70 145 Z" fill="#EF3E4A"></path>
+        <ellipse cx="54" cy="70" rx="8" ry="15" fill="#FFFFFF" opacity=".45" transform="rotate(-20 54 70)"></ellipse>
+        <ellipse cx="166" cy="102" rx="42" ry="52" fill="#FF8A3D"></ellipse>
+        <path d="M159 162 L173 162 L166 153 Z" fill="#FF8A3D"></path>
+        <ellipse cx="152" cy="82" rx="8" ry="14" fill="#FFFFFF" opacity=".45" transform="rotate(-20 152 82)"></ellipse>
+        <ellipse cx="118" cy="70" rx="46" ry="58" fill="#F7A8C4"></ellipse>
+        <path d="M111 136 L125 136 L118 127 Z" fill="#F7A8C4"></path>
+        <ellipse cx="100" cy="46" rx="9" ry="16" fill="#FFFFFF" opacity=".5" transform="rotate(-20 100 46)"></ellipse>
+      </svg>
+      <svg class="balloons balloons--right" viewBox="0 0 230 260" aria-hidden="true">
+        <path d="M70 154 Q58 205 112 256" stroke="#8A96A3" stroke-width="2" fill="none"></path>
+        <path d="M118 136 Q126 200 112 256" stroke="#8A96A3" stroke-width="2" fill="none"></path>
+        <path d="M166 162 Q164 210 112 256" stroke="#8A96A3" stroke-width="2" fill="none"></path>
+        <ellipse cx="70" cy="92" rx="44" ry="54" fill="#6EC3E6"></ellipse>
+        <path d="M63 154 L77 154 L70 145 Z" fill="#6EC3E6"></path>
+        <ellipse cx="54" cy="70" rx="8" ry="15" fill="#FFFFFF" opacity=".45" transform="rotate(-20 54 70)"></ellipse>
+        <ellipse cx="166" cy="102" rx="42" ry="52" fill="#B48CE8"></ellipse>
+        <path d="M159 162 L173 162 L166 153 Z" fill="#B48CE8"></path>
+        <ellipse cx="152" cy="82" rx="8" ry="14" fill="#FFFFFF" opacity=".45" transform="rotate(-20 152 82)"></ellipse>
+        <ellipse cx="118" cy="70" rx="46" ry="58" fill="#FFC56E"></ellipse>
+        <path d="M111 136 L125 136 L118 127 Z" fill="#FFC56E"></path>
+        <ellipse cx="100" cy="46" rx="9" ry="16" fill="#FFFFFF" opacity=".5" transform="rotate(-20 100 46)"></ellipse>
+      </svg>
+      <div class="stripe stripe--bottom"></div>
+
+      <!-- Scene 5: the countdown card pops up over the celebration. -->
+      <div class="card-overlay" hidden>
+        <div class="card-layout">
+          <img class="sticker" data-gif="sticker" alt="">
+
+          <!-- Only one panel is visible at a time; app.js decides which one. -->
+          <div class="card" aria-live="polite">
+            <div data-card="idle">
+              <p class="card-eyebrow">Una última sorpresa</p>
+              <h2 class="card-title">Tu regalo está listo</h2>
+              <p class="card-text">Presiona el botón y espera la cuenta regresiva.</p>
+              <button id="activate-button" class="primary-button" type="button" disabled>Conectando...</button>
             </div>
-            <button id="cancel-button" class="secondary-button" type="button">Cancelar</button>
-          </div>
 
-          <div data-card="waiting" hidden>
-            <h2 class="card-title">Activando…</h2>
-            <p class="card-text">Esperando la respuesta del circuito.</p>
-          </div>
+            <div data-card="counting" hidden>
+              <p class="card-text">Encendiendo en…</p>
+              <div class="ring">
+                <svg viewBox="0 0 220 220" aria-hidden="true">
+                  <circle class="ring-track" cx="110" cy="110" r="96"></circle>
+                  <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="96"></circle>
+                </svg>
+                <p class="ring-number" id="count-number">5</p>
+              </div>
+              <button id="cancel-button" class="secondary-button" type="button">Cancelar</button>
+            </div>
 
-          <div data-card="done" hidden>
-            <img class="photo" data-gif="success" alt="Personaje celebrando">
-            <h2 class="card-title card-title--success">¡Circuito activado!</h2>
-            <p class="card-strong">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-              Ahora observa el circuito
-            </p>
-            <button id="repeat-button" class="secondary-button" type="button">Repetir</button>
-          </div>
+            <div data-card="waiting" hidden>
+              <h2 class="card-title">Activando…</h2>
+              <p class="card-text">Esperando la respuesta del circuito.</p>
+            </div>
 
-          <div data-card="error" hidden>
-            <h2 class="card-title">No se pudo conectar con el circuito</h2>
-            <p class="card-text">El circuito no respondió a tiempo.</p>
-            <button id="retry-button" class="primary-button" type="button">Reintentar</button>
+            <div data-card="done" hidden>
+              <img class="photo" data-gif="success" alt="Personaje celebrando">
+              <h2 class="card-title card-title--success">¡Circuito activado!</h2>
+              <p class="card-strong">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                Ahora observa el circuito
+              </p>
+              <button id="repeat-button" class="secondary-button" type="button">Repetir</button>
+            </div>
+
+            <div data-card="error" hidden>
+              <h2 class="card-title">No se pudo conectar con el circuito</h2>
+              <p class="card-text">El circuito no respondió a tiempo.</p>
+              <button id="retry-button" class="primary-button" type="button">Reintentar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -164,6 +277,7 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>

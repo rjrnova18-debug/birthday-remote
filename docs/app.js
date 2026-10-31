@@ -6,6 +6,7 @@
 import { connectDevice } from "./device.js";
 import { openEnvelope, scatterStars } from "./envelope.js";
 import { unfoldLetter } from "./unfold.js";
+import { playCelebration } from "./celebration.js";
 
 // Everything you may want to tweak lives here. Nothing secret.
 const CONFIG = {
@@ -14,16 +15,18 @@ const CONFIG = {
   countdownSeconds: 5,
   confirmTimeoutMs: 5000, // How long to wait for the ESP32 to confirm the ON.
   gifs: {
+    dance: "https://media.tenor.com/ezk10TtQiCUAAAAj/club-penguin-club-penguin-dance.gif",
+    birthday: "https://media.tenor.com/38aGDkTKEloAAAAj/birthday-happy-birthday.gif",
     sticker: "https://i.pinimg.com/originals/3c/75/75/3c75754e5daa43f5f2618a587f449544.gif",
     success: "https://media1.tenor.com/m/g16jQZqbvWoAAAAC/yippee-happy.gif",
   },
   letterPauseMs: 600, // Pause with the letter out of the envelope before scene 3.
+  cardDelayMs: 4000, // Time to enjoy the celebration before the card pops up.
 };
 
-// The scenes, in the order the friend sees them.
-// "envelope" covers storyboard scenes 1–3: the envelope opens and the letter
-// unfolds in place, so there is no cut between them.
-const SCENES = ["envelope", "celebration", "card"];
+// Two scenes: "envelope" covers storyboard scenes 1–3 (the envelope opens and
+// the letter unfolds in place) and "celebration" covers 4–5 (the countdown
+// card pops up over it).
 
 // Length of the countdown ring's circle (2 * PI * radius 96), used to empty it.
 const RING_LENGTH = 2 * Math.PI * 96;
@@ -31,10 +34,12 @@ const RING_LENGTH = 2 * Math.PI * 96;
 const params = new URLSearchParams(window.location.search);
 const topicKey = params.get("t");
 const friendName = params.get("n") || CONFIG.defaultName;
-// ?s=card jumps straight to a scene: handy while developing.
-const firstScene = SCENES.includes(params.get("s")) ? params.get("s") : SCENES[0];
+// ?s=celebration or ?s=card skips the intro: handy while developing.
+const devStart = params.get("s");
 
 const envelopeScene = document.querySelector('[data-scene="envelope"]');
+const celebrationScene = document.querySelector('[data-scene="celebration"]');
+const cardOverlay = document.querySelector(".card-overlay");
 const envelopeButton = document.getElementById("envelope-button");
 const activateButton = document.getElementById("activate-button");
 const cancelButton = document.getElementById("cancel-button");
@@ -44,7 +49,8 @@ const countNumber = document.getElementById("count-number");
 const ringProgress = document.getElementById("ring-progress");
 
 // What the page knows.
-let scene = firstScene;
+let scene = "envelope"; // envelope | celebration
+let cardShown = false;
 let cardState = "idle"; // idle | counting | waiting | done | error
 let count = CONFIG.countdownSeconds;
 let deviceState = { brokerConnected: false, deviceOnline: false, ledIsOn: false };
@@ -60,24 +66,26 @@ function goTo(nextScene) {
   render();
 }
 
-function goToNextScene() {
-  const index = SCENES.indexOf(scene);
-  if (index < SCENES.length - 1) {
-    goTo(SCENES[index + 1]);
-  }
-}
-
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Scenes 1 → 2 → 3 → 4: one timeline, each step waits for the previous one.
+// Scenes 1 → 2 → 3: one timeline, each step waits for the previous one.
 async function openLetter() {
   envelopeButton.disabled = true; // A second tap must not restart the animation.
   await openEnvelope(envelopeScene);
   await wait(CONFIG.letterPauseMs);
   await unfoldLetter(envelopeScene);
+  await enterCelebration(CONFIG.cardDelayMs);
+}
+
+// Scenes 4 → 5: the party starts on its own; the card pops up a bit later.
+async function enterCelebration(cardDelayMs) {
   goTo("celebration");
+  playCelebration(celebrationScene);
+  await wait(cardDelayMs);
+  cardShown = true;
+  render();
 }
 
 // --- Countdown card ---
@@ -171,6 +179,7 @@ function showOnly(selector, key, value) {
 // Single place that decides what the page shows.
 function render() {
   showOnly("[data-scene]", "scene", scene);
+  cardOverlay.hidden = !cardShown;
   showOnly("[data-card]", "card", cardState);
 
   activateButton.disabled = !deviceReady();
@@ -192,10 +201,6 @@ for (const image of document.querySelectorAll("[data-gif]")) {
   image.src = CONFIG.gifs[image.dataset.gif];
 }
 
-for (const button of document.querySelectorAll(".next-button")) {
-  button.addEventListener("click", goToNextScene);
-}
-
 scatterStars(envelopeScene.querySelector(".stars"));
 envelopeButton.addEventListener("click", openLetter);
 
@@ -211,3 +216,9 @@ if (topicKey) {
 }
 
 render();
+
+if (devStart === "celebration") {
+  enterCelebration(CONFIG.cardDelayMs);
+} else if (devStart === "card") {
+  enterCelebration(0);
+}
