@@ -454,8 +454,7 @@ body {
 .stripe--bottom {
   height: 72px;
   margin-top: auto;
-  background: var(--sky);
-  border-top: 4px solid var(--sky-stripe);
+  border-top: 4px solid var(--lavender-stripe);
 }
 
 .celebration-for {
