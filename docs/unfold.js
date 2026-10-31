@@ -3,8 +3,17 @@
 // Uses the Web Animations API: every step returns a promise, so the timeline
 // below reads top to bottom like a script.
 
+// CSS cannot slow down these JS animations, so "reduce motion" is honoured here:
+// every step jumps to its end.
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 function play(element, keyframes, options) {
-  return element.animate(keyframes, { fill: "forwards", easing: "ease-in-out", ...options }).finished;
+  const timing = { fill: "forwards", easing: "ease-in-out", ...options };
+  if (reduceMotion) {
+    timing.duration = 1;
+    timing.delay = 0;
+  }
+  return element.animate(keyframes, timing).finished;
 }
 
 function wait(ms) {

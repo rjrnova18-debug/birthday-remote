@@ -224,6 +224,12 @@
       </svg>
       <div class="stripe stripe--bottom"></div>
 
+      <!-- Shown while the card is closed, so the friend can enjoy the party and come back. -->
+      <button class="card-reopen" id="card-reopen" type="button" hidden>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"></rect><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S10 8 12 8zM12 8c2-4 6-4 6-1.5S14 8 12 8z"></path></svg>
+        Tu sorpresa
+      </button>
+
       <!-- Scene 5: the countdown card pops up over the celebration. -->
       <div class="card-overlay" hidden>
         <div class="card-layout">
@@ -231,6 +237,10 @@
 
           <!-- Only one panel is visible at a time; app.js decides which one. -->
           <div class="card" aria-live="polite">
+            <button class="card-close" id="card-close" type="button" aria-label="Cerrar la tarjeta">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            </button>
+
             <div data-card="idle">
               <p class="card-eyebrow">Una última sorpresa</p>
               <h2 class="card-title">Tu regalo está listo</h2>

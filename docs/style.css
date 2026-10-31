@@ -23,6 +23,11 @@
   display: none !important;
 }
 
+button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -691,6 +696,53 @@ body {
   animation-delay: 0.15s;
 }
 
+/* Close (×) in the card's corner. */
+.card-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #4a5568;
+  background: #f2f4f7;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.card-close:hover {
+  background: #e4e8ee;
+}
+
+/* "Tu sorpresa": brings the card back after it was closed. */
+.card-reopen {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  z-index: 15;
+  height: 56px;
+  padding: 0 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font: 700 1.2rem var(--font-greeting);
+  color: #fff;
+  background: var(--accent);
+  border: 3px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(31, 78, 99, 0.25);
+  cursor: pointer;
+  transform: translateX(-50%);
+  animation: reopen-in 0.4s cubic-bezier(0.3, 1.4, 0.5, 1) both, pulse 1.6s 0.4s ease-out infinite;
+}
+
+@keyframes reopen-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+}
+
 /* Each panel of the card pops when it appears (e.g. "¡Circuito activado!"). */
 .card > div:not([hidden]) {
   animation: pop-in 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
@@ -704,14 +756,19 @@ body {
   gap: 2rem;
 }
 
+/* White backing like the celebration GIFs: Tenor stickers have transparent backgrounds. */
 .sticker {
   width: 200px;
+  box-sizing: border-box;
+  padding: 8px;
+  background: #fff;
   border-radius: 22px;
   transform: rotate(-5deg);
   box-shadow: 0 8px 20px rgba(31, 78, 99, 0.2);
 }
 
 .card {
+  position: relative;
   width: min(100%, 36rem);
   box-sizing: border-box;
   padding: 2.5rem 2rem;
@@ -867,5 +924,19 @@ body {
 
   .sticker {
     width: 130px;
+  }
+}
+
+/* --- Reduced motion: if the system asks for less movement, every animation
+   jumps straight to its end. The story still plays, just without motion. --- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

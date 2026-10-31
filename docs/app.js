@@ -17,11 +17,11 @@ const CONFIG = {
   gifs: {
     dance: "https://media.tenor.com/ezk10TtQiCUAAAAj/club-penguin-club-penguin-dance.gif",
     birthday: "https://media.tenor.com/38aGDkTKEloAAAAj/birthday-happy-birthday.gif",
-    sticker: "https://i.pinimg.com/originals/3c/75/75/3c75754e5daa43f5f2618a587f449544.gif",
+    sticker: "https://media.tenor.com/sbfBfp3FeY8AAAAj/oia-uia.gif",
     success: "https://media1.tenor.com/m/g16jQZqbvWoAAAAC/yippee-happy.gif",
   },
   letterPauseMs: 600, // Pause with the letter out of the envelope before scene 3.
-  cardDelayMs: 4000, // Time to enjoy the celebration before the card pops up.
+  cardDelayMs: 8000, // Time to enjoy the celebration before the card pops up.
 };
 
 // Two scenes: "envelope" covers storyboard scenes 1–3 (the envelope opens and
@@ -40,6 +40,8 @@ const devStart = params.get("s");
 const envelopeScene = document.querySelector('[data-scene="envelope"]');
 const celebrationScene = document.querySelector('[data-scene="celebration"]');
 const cardOverlay = document.querySelector(".card-overlay");
+const closeCardButton = document.getElementById("card-close");
+const reopenCardButton = document.getElementById("card-reopen");
 const envelopeButton = document.getElementById("envelope-button");
 const activateButton = document.getElementById("activate-button");
 const cancelButton = document.getElementById("cancel-button");
@@ -50,7 +52,8 @@ const ringProgress = document.getElementById("ring-progress");
 
 // What the page knows.
 let scene = "envelope"; // envelope | celebration
-let cardShown = false;
+let cardReady = false; // Has the card popped up at least once?
+let cardShown = false; // Is it open right now? The friend can close and reopen it.
 let cardState = "idle"; // idle | counting | waiting | done | error
 let count = CONFIG.countdownSeconds;
 let deviceState = { brokerConnected: false, deviceOnline: false, ledIsOn: false };
@@ -84,8 +87,26 @@ async function enterCelebration(cardDelayMs) {
   goTo("celebration");
   playCelebration(celebrationScene);
   await wait(cardDelayMs);
+  openCard();
+}
+
+function openCard() {
+  cardReady = true;
   cardShown = true;
   render();
+  closeCardButton.focus();
+}
+
+// Closing in the middle of the countdown cancels it: the circuit must never
+// fire while the friend is not looking at the card.
+function closeCard() {
+  if (cardState === "counting") {
+    stopCountdown();
+    cardState = "idle";
+  }
+  cardShown = false;
+  render();
+  reopenCardButton.focus();
 }
 
 // --- Countdown card ---
@@ -180,6 +201,7 @@ function showOnly(selector, key, value) {
 function render() {
   showOnly("[data-scene]", "scene", scene);
   cardOverlay.hidden = !cardShown;
+  reopenCardButton.hidden = !(cardReady && !cardShown);
   showOnly("[data-card]", "card", cardState);
 
   activateButton.disabled = !deviceReady();
@@ -208,6 +230,20 @@ activateButton.addEventListener("click", startCountdown);
 cancelButton.addEventListener("click", cancelCountdown);
 repeatButton.addEventListener("click", repeat);
 retryButton.addEventListener("click", startCountdown);
+
+closeCardButton.addEventListener("click", closeCard);
+reopenCardButton.addEventListener("click", openCard);
+// A click on the dimmed background (not on the card or the GIF) also closes it.
+cardOverlay.addEventListener("click", (event) => {
+  if (event.target === cardOverlay || event.target.classList.contains("card-layout")) {
+    closeCard();
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && cardShown) {
+    closeCard();
+  }
+});
 
 if (topicKey) {
   device = connectDevice(CONFIG.brokerUrl, topicKey, handleDeviceChange);
