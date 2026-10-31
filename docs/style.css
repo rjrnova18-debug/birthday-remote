@@ -1,16 +1,76 @@
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: #99d9ea;
+/* Palette and fonts in one place: change a color here and it changes everywhere. */
+:root {
+  --sky: #a9ddee;
+  --sky-stripe: #8ccde3;
+  --paper: #fffdf8;
+  --pink: #f7a8c4;
+  --kraft: #edb867;
+  --kraft-edge: #b9782a;
+  --wax: #c8262e;
+  --spark-yellow: #ffd447;
+  --spark-orange: #ff8a2e;
+  --ink: #1f4e63;
+
+  --font-greeting: "Fredoka", sans-serif;
+  --font-hand: "Caveat", cursive;
+  --font-body: "Nunito", system-ui, sans-serif;
 }
 
-button {
+/* .scene uses display: grid, which would beat the hidden attribute without this. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--sky);
+}
+
+.scene {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 1rem;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.5rem;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.scene p {
+  margin: 0;
+}
+
+.scene--sky {
+  background: var(--sky);
+}
+
+.scene--paper {
+  background: var(--paper);
+}
+
+.scene-label {
+  font-family: var(--font-greeting);
+  font-size: 2rem;
+}
+
+.next-button {
+  padding: 0.8rem 2rem;
+  font: 700 1.2rem var(--font-body);
+  color: #fff;
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* Temporary ON/OFF button from 2C; step 2 replaces it with the countdown card. */
+#toggle-button {
   padding: 1.2rem 3.5rem;
-  font-family: system-ui, sans-serif;
-  font-size: 3rem;
-  font-weight: 800;
+  font: 800 3rem system-ui, sans-serif;
   color: #000;
   background: #c3c3c3;
   border: 6px solid #fff;
@@ -18,15 +78,15 @@ button {
   cursor: pointer;
 }
 
-button:hover:not(:disabled) {
+#toggle-button:hover:not(:disabled) {
   filter: brightness(1.08);
 }
 
-button:active:not(:disabled) {
+#toggle-button:active:not(:disabled) {
   transform: scale(0.96);
 }
 
-button:disabled {
+#toggle-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

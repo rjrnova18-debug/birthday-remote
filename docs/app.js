@@ -1,74 +1,85 @@
-// Birthday Remote: toggles the ESP32 LED over MQTT and mirrors its real state.
-// The secret part of the topic is NOT stored in this file. It comes from the
-// link (?t=your-secret), so it never ends up in the public repository.
+// Birthday Remote page: decides which scene is visible and draws it from
+// what device.js reports. It knows nothing about MQTT.
+// The secret topic key and the friend's name come from the link
+// (?t=your-secret&n=Name), so neither ends up in the public repository.
 
-const BROKER_URL = "wss://broker.hivemq.com:8884/mqtt";
+import { connectDevice } from "./device.js";
 
-const button = document.getElementById("toggle-button");
-const topicKey = new URLSearchParams(window.location.search).get("t");
-const ledTopic = `${topicKey}/led`;
-const stateTopic = `${topicKey}/state`;
-const statusTopic = `${topicKey}/status`;
+// Everything you may want to tweak lives here. Nothing secret.
+const CONFIG = {
+  brokerUrl: "wss://broker.hivemq.com:8884/mqtt",
+  defaultName: "amigo",
+};
 
-// What the page knows. Everything comes from the broker, nothing is guessed.
-let brokerConnected = false; // Is this page connected to the broker?
-let deviceOnline = false; // Did the ESP32 announce itself as online?
-let ledIsOn = false; // Real LED state, as announced by the ESP32.
+// The scenes, in the order the friend sees them.
+const SCENES = ["envelope", "opening", "unfold", "celebration", "card"];
 
-// Single place that decides how the button looks and whether it can be pressed.
-// The label shows the action the button will perform next.
-function render() {
-  button.disabled = !(brokerConnected && deviceOnline);
+const params = new URLSearchParams(window.location.search);
+const topicKey = params.get("t");
+const friendName = params.get("n") || CONFIG.defaultName;
 
-  if (!brokerConnected) {
-    button.textContent = "CONNECTING...";
-  } else if (!deviceOnline) {
-    button.textContent = "OFFLINE";
-  } else {
-    button.textContent = ledIsOn ? "OFF" : "ON";
-  }
-}
+const toggleButton = document.getElementById("toggle-button");
 
-function handleMessage(topic, payload) {
-  const message = payload.toString();
+// What the page knows.
+let scene = SCENES[0];
+let deviceState = { brokerConnected: false, deviceOnline: false, ledIsOn: false };
+let device = null; // Commands for the ESP32; stays null if the link has no key.
 
-  if (topic === stateTopic) {
-    ledIsOn = message === "ON";
-  } else if (topic === statusTopic) {
-    deviceOnline = message === "online";
-  }
+function goTo(nextScene) {
+  scene = nextScene;
   render();
 }
 
-function startClient() {
-  const client = mqtt.connect(BROKER_URL, { reconnectPeriod: 3000 });
-
-  // Subscribe on every (re)connection. The broker immediately delivers the
-  // retained messages, so the page learns the current state on load.
-  client.on("connect", () => {
-    client.subscribe([stateTopic, statusTopic]);
-    brokerConnected = true;
-    render();
-  });
-  client.on("close", () => {
-    brokerConnected = false;
-    render();
-  });
-  client.on("error", (error) => {
-    console.error("MQTT error:", error);
-  });
-  client.on("message", handleMessage);
-
-  // Send the command only. The label changes when the ESP32 confirms it.
-  button.addEventListener("click", () => {
-    client.publish(ledTopic, ledIsOn ? "OFF" : "ON");
-  });
+function goToNextScene() {
+  const index = SCENES.indexOf(scene);
+  if (index < SCENES.length - 1) {
+    goTo(SCENES[index + 1]);
+  }
 }
 
-render();
+// Single place that decides what the page shows.
+function render() {
+  for (const section of document.querySelectorAll("[data-scene]")) {
+    section.hidden = section.dataset.scene !== scene;
+  }
+
+  toggleButton.disabled = !(deviceState.brokerConnected && deviceState.deviceOnline);
+
+  if (!deviceState.brokerConnected) {
+    toggleButton.textContent = "CONNECTING...";
+  } else if (!deviceState.deviceOnline) {
+    toggleButton.textContent = "OFFLINE";
+  } else {
+    toggleButton.textContent = deviceState.ledIsOn ? "OFF" : "ON";
+  }
+}
+
+// --- Start ---
+
+for (const slot of document.querySelectorAll("[data-friend-name]")) {
+  slot.textContent = friendName;
+}
+
+for (const button of document.querySelectorAll(".next-button")) {
+  button.addEventListener("click", goToNextScene);
+}
+
+// Send the command only. The label changes when the ESP32 confirms it.
+toggleButton.addEventListener("click", () => {
+  if (deviceState.ledIsOn) {
+    device.sendOff();
+  } else {
+    device.sendOn();
+  }
+});
 
 if (topicKey) {
-  startClient();
+  device = connectDevice(CONFIG.brokerUrl, topicKey, (newState) => {
+    deviceState = newState;
+    render();
+  });
 } else {
   console.warn("Missing topic key: open this page with ?t=your-secret in the link.");
 }
+
+render();

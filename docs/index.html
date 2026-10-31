@@ -1,15 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LED Remote</title>
+  <title>Birthday Remote</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@700&family=Nunito:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <button id="toggle-button" disabled>ON</button>
+  <!-- Only one scene is visible at a time; app.js decides which one. -->
+  <main>
+    <section class="scene scene--sky" data-scene="envelope">
+      <p class="scene-label">1 · Sobre cerrado</p>
+      <p>Una carta para <span data-friend-name></span></p>
+      <button class="next-button" type="button">Siguiente</button>
+    </section>
+
+    <section class="scene scene--sky" data-scene="opening" hidden>
+      <p class="scene-label">2 · El sobre se abre</p>
+      <button class="next-button" type="button">Siguiente</button>
+    </section>
+
+    <section class="scene scene--paper" data-scene="unfold" hidden>
+      <p class="scene-label">3 · La carta se desdobla</p>
+      <button class="next-button" type="button">Siguiente</button>
+    </section>
+
+    <section class="scene scene--paper" data-scene="celebration" hidden>
+      <p class="scene-label">4 · Celebración</p>
+      <p>Para <span data-friend-name></span></p>
+      <button class="next-button" type="button">Siguiente</button>
+    </section>
+
+    <section class="scene scene--paper" data-scene="card" hidden>
+      <p class="scene-label">5 · Tarjeta</p>
+      <button id="toggle-button" type="button" disabled>CONNECTING...</button>
+    </section>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
