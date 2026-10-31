@@ -34,9 +34,53 @@
       <button class="next-button" type="button">Siguiente</button>
     </section>
 
-    <section class="scene scene--paper" data-scene="card" hidden>
-      <p class="scene-label">5 · Tarjeta</p>
-      <button id="toggle-button" type="button" disabled>CONNECTING...</button>
+        <section class="scene scene--paper" data-scene="card" hidden>
+      <div class="card-layout">
+        <img class="sticker" data-gif="sticker" alt="">
+
+        <!-- Only one panel is visible at a time; app.js decides which one. -->
+        <div class="card" aria-live="polite">
+          <div data-card="idle">
+            <p class="card-eyebrow">Una última sorpresa</p>
+            <h2 class="card-title">Tu regalo está listo</h2>
+            <p class="card-text">Presiona el botón y espera la cuenta regresiva.</p>
+            <button id="activate-button" class="primary-button" type="button" disabled>Conectando...</button>
+          </div>
+
+          <div data-card="counting" hidden>
+            <p class="card-text">Encendiendo en…</p>
+            <div class="ring">
+              <svg viewBox="0 0 220 220" aria-hidden="true">
+                <circle class="ring-track" cx="110" cy="110" r="96"></circle>
+                <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="96"></circle>
+              </svg>
+              <p class="ring-number" id="count-number">5</p>
+            </div>
+            <button id="cancel-button" class="secondary-button" type="button">Cancelar</button>
+          </div>
+
+          <div data-card="waiting" hidden>
+            <h2 class="card-title">Activando…</h2>
+            <p class="card-text">Esperando la respuesta del circuito.</p>
+          </div>
+
+          <div data-card="done" hidden>
+            <img class="photo" data-gif="success" alt="Personaje celebrando">
+            <h2 class="card-title card-title--success">¡Circuito activado!</h2>
+            <p class="card-strong">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              Ahora observa el circuito
+            </p>
+            <button id="repeat-button" class="secondary-button" type="button">Repetir</button>
+          </div>
+
+          <div data-card="error" hidden>
+            <h2 class="card-title">No se pudo conectar con el circuito</h2>
+            <p class="card-text">El circuito no respondió a tiempo.</p>
+            <button id="retry-button" class="primary-button" type="button">Reintentar</button>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 

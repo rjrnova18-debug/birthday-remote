@@ -10,6 +10,8 @@
   --spark-yellow: #ffd447;
   --spark-orange: #ff8a2e;
   --ink: #1f4e63;
+  --accent: #c92d66;
+  --success: #1e7a45;
 
   --font-greeting: "Fredoka", sans-serif;
   --font-hand: "Caveat", cursive;
@@ -67,26 +69,149 @@ body {
   cursor: pointer;
 }
 
-/* Temporary ON/OFF button from 2C; step 2 replaces it with the countdown card. */
-#toggle-button {
-  padding: 1.2rem 3.5rem;
-  font: 800 3rem system-ui, sans-serif;
-  color: #000;
-  background: #c3c3c3;
-  border: 6px solid #fff;
-  border-radius: 2rem;
+/* --- Scene 5: countdown card --- */
+
+.card-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.sticker {
+  width: 200px;
+  border-radius: 22px;
+  transform: rotate(-5deg);
+  box-shadow: 0 8px 20px rgba(31, 78, 99, 0.2);
+}
+
+.card {
+  width: min(100%, 36rem);
+  box-sizing: border-box;
+  padding: 2.5rem 2rem;
+  background: #fff;
+  border-radius: 32px;
+  box-shadow: 0 24px 60px rgba(31, 78, 99, 0.22);
+}
+
+.card > div {
+  display: grid;
+  justify-items: center;
+  gap: 1.2rem;
+}
+
+.card-eyebrow {
+  font-family: var(--font-greeting);
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a3264f;
+}
+
+.card-title {
+  margin: 0;
+  font-family: var(--font-greeting);
+  font-size: 2.4rem;
+  line-height: 1.1;
+  color: #1f2a44;
+}
+
+.card-title--success {
+  color: var(--success);
+}
+
+.card-text {
+  font-size: 1.1rem;
+  color: #4a5568;
+}
+
+.card-strong {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+.primary-button {
+  height: 68px;
+  padding: 0 2.5rem;
+  font: 700 1.4rem var(--font-greeting);
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  animation: pulse 1.6s ease-out infinite;
+}
+
+.primary-button:disabled {
+  background: #6b7785;
+  animation: none;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  height: 48px;
+  padding: 0 1.5rem;
+  font: 700 1rem var(--font-body);
+  color: #4a5568;
+  background: #fff;
+  border: 2px solid #d5dce4;
+  border-radius: 999px;
   cursor: pointer;
 }
 
-#toggle-button:hover:not(:disabled) {
-  filter: brightness(1.08);
+@keyframes pulse {
+  from { box-shadow: 0 0 0 0 rgba(201, 45, 102, 0.45); }
+  to { box-shadow: 0 0 0 22px rgba(201, 45, 102, 0); }
 }
 
-#toggle-button:active:not(:disabled) {
-  transform: scale(0.96);
+.ring {
+  position: relative;
+  width: 220px;
+  height: 220px;
 }
 
-#toggle-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* start the ring at 12 o'clock */
+}
+
+.ring-track,
+.ring-progress {
+  fill: none;
+  stroke-width: 14;
+}
+
+.ring-track {
+  stroke: #fce1eb;
+}
+
+.ring-progress {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-dasharray: 603.19; /* 2 * PI * 96, the circle's length */
+  transition: stroke-dashoffset 1s linear;
+}
+
+.scene .ring-number {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  font: 700 6.5rem var(--font-greeting);
+  color: var(--accent);
+}
+
+.photo {
+  width: 200px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(31, 78, 99, 0.2);
+  transform: rotate(-3deg);
 }
