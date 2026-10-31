@@ -1,7 +1,7 @@
 // Scene 4: the celebration. Pure presentation: it starts the CSS entrance
 // (the .is-playing rules in style.css) and fires the confetti.
 
-const CONFETTI_COLORS = ["#F25F8C", "#FFB547", "#2F9FCB", "#7BBF5A", "#A77BE0", "#FF7A45"];
+const CONFETTI_COLORS = ["#F7A8C4", "#B48CE8", "#C9B6F2", "#8FD3EA", "#BFE8D2", "#FFD3B6", "#FFE08A"];
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
