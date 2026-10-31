@@ -4,6 +4,7 @@
 // (?t=your-secret&n=Name), so neither ends up in the public repository.
 
 import { connectDevice } from "./device.js";
+import { openEnvelope, scatterStars } from "./envelope.js";
 
 // Everything you may want to tweak lives here. Nothing secret.
 const CONFIG = {
@@ -15,10 +16,12 @@ const CONFIG = {
     sticker: "https://i.pinimg.com/originals/3c/75/75/3c75754e5daa43f5f2618a587f449544.gif",
     success: "https://media1.tenor.com/m/g16jQZqbvWoAAAAC/yippee-happy.gif",
   },
+  letterPauseMs: 600, // Pause with the letter out of the envelope before scene 3.
 };
 
 // The scenes, in the order the friend sees them.
-const SCENES = ["envelope", "opening", "unfold", "celebration", "card"];
+// "envelope" covers storyboard scenes 1 and 2: the envelope opens in place.
+const SCENES = ["envelope", "unfold", "celebration", "card"];
 
 // Length of the countdown ring's circle (2 * PI * radius 96), used to empty it.
 const RING_LENGTH = 2 * Math.PI * 96;
@@ -29,6 +32,8 @@ const friendName = params.get("n") || CONFIG.defaultName;
 // ?s=card jumps straight to a scene: handy while developing.
 const firstScene = SCENES.includes(params.get("s")) ? params.get("s") : SCENES[0];
 
+const envelopeScene = document.querySelector('[data-scene="envelope"]');
+const envelopeButton = document.getElementById("envelope-button");
 const activateButton = document.getElementById("activate-button");
 const cancelButton = document.getElementById("cancel-button");
 const repeatButton = document.getElementById("repeat-button");
@@ -58,6 +63,18 @@ function goToNextScene() {
   if (index < SCENES.length - 1) {
     goTo(SCENES[index + 1]);
   }
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Scenes 1 → 2 → 3: one timeline, each step waits for the previous one.
+async function openLetter() {
+  envelopeButton.disabled = true; // A second tap must not restart the animation.
+  await openEnvelope(envelopeScene);
+  await wait(CONFIG.letterPauseMs);
+  goTo("unfold");
 }
 
 // --- Countdown card ---
@@ -175,6 +192,9 @@ for (const image of document.querySelectorAll("[data-gif]")) {
 for (const button of document.querySelectorAll(".next-button")) {
   button.addEventListener("click", goToNextScene);
 }
+
+scatterStars(envelopeScene.querySelector(".stars"));
+envelopeButton.addEventListener("click", openLetter);
 
 activateButton.addEventListener("click", startCountdown);
 cancelButton.addEventListener("click", cancelCountdown);

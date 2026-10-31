@@ -12,15 +12,79 @@
 <body>
   <!-- Only one scene is visible at a time; app.js decides which one. -->
   <main>
-    <section class="scene scene--sky" data-scene="envelope">
-      <p class="scene-label">1 · Sobre cerrado</p>
-      <p>Una carta para <span data-friend-name></span></p>
-      <button class="next-button" type="button">Siguiente</button>
-    </section>
+        <section class="scene scene--sky envelope-scene" data-scene="envelope">
+      <div class="stars" aria-hidden="true"></div>
 
-    <section class="scene scene--sky" data-scene="opening" hidden>
-      <p class="scene-label">2 · El sobre se abre</p>
-      <button class="next-button" type="button">Siguiente</button>
+      <p class="envelope-title">Una carta para <span data-friend-name></span></p>
+
+      <button class="envelope-button" id="envelope-button" type="button" aria-label="Abrir el sobre">
+        <span class="envelope">
+          <svg class="env-layer env-back" viewBox="0 0 540 350" aria-hidden="true">
+            <rect x="14" y="14" width="512" height="322" rx="14" fill="#D99C4B" stroke="#B9782A" stroke-width="6"></rect>
+          </svg>
+
+          <span class="env-letter">
+            <svg viewBox="0 0 216 260" aria-hidden="true">
+              <rect x="10" y="10" width="204" height="248" rx="3" fill="#F3EBDD" stroke="#DCCDB4" stroke-width="1.5"></rect>
+              <rect x="6" y="6" width="204" height="248" rx="3" fill="#F8F2E8" stroke="#DCCDB4" stroke-width="1.5"></rect>
+              <rect x="2" y="2" width="204" height="248" rx="3" fill="#FFFDF8" stroke="#D6C6AB" stroke-width="2"></rect>
+              <path d="M4 4 H204 M4 4 V248" stroke="#EDE4D4" stroke-width="5" stroke-linecap="round"></path>
+              <path d="M188 214 L192.1 224.3 L203.2 225.1 L194.7 232.2 L197.4 242.9 L188 237 L178.6 242.9 L181.3 232.2 L172.8 225.1 L183.9 224.3 Z" fill="#FFD447" stroke="#E9A83E" stroke-width="2" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+
+          <svg class="env-layer env-pocket" viewBox="0 0 540 350" aria-hidden="true">
+            <path d="M14 16 L270 206 L526 16 L526 322 Q526 336 512 336 L28 336 Q14 336 14 322 Z" fill="#EDB867" stroke="#B9782A" stroke-width="5" stroke-linejoin="round"></path>
+            <path d="M22 328 L236 190 M518 328 L304 190" stroke="#D39A49" stroke-width="3" stroke-linecap="round"></path>
+            <text class="envelope-label" x="270" y="306" text-anchor="middle">Ábreme</text>
+          </svg>
+
+          <span class="env-flap">
+            <svg class="flap-face flap-front" viewBox="0 0 512 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M3 3 L256 197 L509 3 Z" fill="#E2A752" stroke="#B9782A" stroke-width="5" stroke-linejoin="round"></path>
+            </svg>
+            <svg class="flap-face flap-back" viewBox="0 0 512 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M3 197 L256 3 L509 197 Z" fill="#F4D39B" stroke="#B9782A" stroke-width="5" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+
+          <svg class="env-layer env-seal" viewBox="0 0 540 350" aria-hidden="true">
+            <defs>
+              <clipPath id="seal-crack-left"><path d="M0 0 H272 L262 170 L278 190 L264 212 L276 236 L268 350 H0 Z"></path></clipPath>
+              <clipPath id="seal-crack-right"><path d="M540 0 H272 L262 170 L278 190 L264 212 L276 236 L268 350 H540 Z"></path></clipPath>
+              <g id="seal-wax">
+                <circle cx="270" cy="196" r="44" fill="#C8262E"></circle>
+                <circle cx="232" cy="186" r="10" fill="#C8262E"></circle>
+                <circle cx="306" cy="212" r="9" fill="#C8262E"></circle>
+                <circle cx="258" cy="238" r="10" fill="#C8262E"></circle>
+                <circle cx="292" cy="158" r="8" fill="#C8262E"></circle>
+                <circle cx="270" cy="196" r="31" fill="none" stroke="#9C1A22" stroke-width="3"></circle>
+                <path d="M248 178 A28 28 0 0 1 272 166" stroke="#E65A5F" stroke-width="4" fill="none" stroke-linecap="round"></path>
+                <path d="M270 216 L270 178 M270 196 Q260 190 258 182 M270 196 Q280 190 282 182 M270 207 Q261 203 259 196 M270 207 Q279 203 281 196" stroke="#8E1720" stroke-width="3" fill="none" stroke-linecap="round"></path>
+              </g>
+            </defs>
+            <g class="seal-sprig">
+              <path d="M236 262 Q262 210 316 130" stroke="#6E8B3D" stroke-width="4" fill="none" stroke-linecap="round"></path>
+              <ellipse cx="300" cy="150" rx="13" ry="5" fill="#86A552" transform="rotate(-40 300 150)"></ellipse>
+              <ellipse cx="318" cy="160" rx="13" ry="5" fill="#86A552" transform="rotate(10 318 160)"></ellipse>
+              <ellipse cx="290" cy="176" rx="12" ry="5" fill="#86A552" transform="rotate(-60 290 176)"></ellipse>
+              <ellipse cx="306" cy="132" rx="12" ry="5" fill="#86A552" transform="rotate(-70 306 132)"></ellipse>
+              <path d="M244 262 Q258 200 254 142" stroke="#6E8B3D" stroke-width="3" fill="none" stroke-linecap="round"></path>
+              <circle cx="254" cy="140" r="8" fill="#F7E6CC" stroke="#E2C9A2" stroke-width="1.5"></circle>
+              <circle cx="266" cy="130" r="7" fill="#F7E6CC" stroke="#E2C9A2" stroke-width="1.5"></circle>
+              <circle cx="244" cy="128" r="7" fill="#F7E6CC" stroke="#E2C9A2" stroke-width="1.5"></circle>
+              <circle cx="256" cy="116" r="6" fill="#F7E6CC" stroke="#E2C9A2" stroke-width="1.5"></circle>
+            </g>
+            <g class="seal-half seal-half--left"><use href="#seal-wax" clip-path="url(#seal-crack-left)"></use></g>
+            <g class="seal-half seal-half--right"><use href="#seal-wax" clip-path="url(#seal-crack-right)"></use></g>
+          </svg>
+        </span>
+      </button>
+
+      <p class="envelope-hint">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+        Toca el sobre para abrirlo
+      </p>
     </section>
 
     <section class="scene scene--paper" data-scene="unfold" hidden>

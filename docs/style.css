@@ -69,6 +69,243 @@ body {
   cursor: pointer;
 }
 
+/* --- Scenes 1–2: the envelope --- */
+
+.envelope-scene {
+  position: relative;
+  overflow: hidden;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  fill: #fff;
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+.envelope-title {
+  position: relative;
+  font-family: var(--font-greeting);
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.envelope-button {
+  position: relative;
+  width: min(540px, 88vw);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-origin: 50% 60%;
+  animation: wobble 3s ease-in-out infinite;
+}
+
+.envelope-button:focus-visible {
+  outline: 4px solid #fff;
+  outline-offset: 10px;
+  border-radius: 18px;
+}
+
+/* Layers, back to front: back → letter → pocket → flap → seal. */
+.envelope {
+  position: relative;
+  display: block;
+  aspect-ratio: 540 / 350;
+  perspective: 1600px; /* far camera: a gentle 3D swing, not a fisheye */
+  perspective-origin: 50% 20%;
+}
+
+.env-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.env-back {
+  z-index: 1;
+  filter: drop-shadow(0 18px 22px rgba(31, 78, 99, 0.28));
+}
+
+/* The folded letter waits inside, hidden by the pocket and the closed flap. */
+.env-letter {
+  position: absolute;
+  left: 30%;
+  top: 11%;
+  width: 40%;
+  height: 74%;
+  z-index: 2;
+}
+
+.env-letter svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.env-pocket {
+  z-index: 3;
+}
+
+.envelope-label {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 54px;
+  fill: #5e3508;
+}
+
+/* The flap is a two-sided card that swings on its top edge. */
+.env-flap {
+  position: absolute;
+  left: 2.593%;
+  top: 4%;
+  width: 94.815%;
+  height: 57.143%;
+  z-index: 4;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+}
+
+.flap-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  backface-visibility: hidden;
+}
+
+/* Drawn tip-up: once the flap swings over, its inner side stands above the
+   envelope with the base on the edge and the tip pointing up. */
+.flap-back {
+  transform: rotateX(180deg);
+}
+
+.env-seal {
+  z-index: 5;
+}
+
+.seal-half {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.envelope-hint {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.envelope-hint svg {
+  animation: nudge 1.4s ease-in-out infinite;
+}
+
+/* Opening timeline: seal 0–0.3 s → flap 0.3–0.9 s → letter 0.9–1.7 s. */
+.is-opening .envelope-button {
+  animation: none;
+  cursor: default;
+}
+
+.is-opening .envelope-title,
+.is-opening .envelope-hint,
+.is-opening .seal-sprig {
+  animation: fade-out 0.3s ease-out forwards;
+}
+
+.is-opening .seal-half--left {
+  animation: seal-left 0.3s ease-in forwards;
+}
+
+.is-opening .seal-half--right {
+  animation: seal-right 0.3s ease-in forwards;
+}
+
+.is-opening .env-flap {
+  animation: flap-open 0.6s 0.3s cubic-bezier(0.45, 0.05, 0.3, 1) forwards;
+}
+
+/* Light changes as the flap turns: the outside darkens as it tilts away,
+   the inside brightens as it comes to face us. */
+.is-opening .flap-front path {
+  animation: shade-front 0.6s 0.3s ease-in-out forwards;
+}
+
+.is-opening .flap-back path {
+  animation: shade-back 0.6s 0.3s ease-in-out forwards;
+}
+
+/* Paper slides out smoothly; no bounce. */
+.is-opening .env-letter {
+  animation: letter-rise 0.8s 0.9s cubic-bezier(0.25, 0.8, 0.35, 1) forwards;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Still for most of the cycle, then a short shake: "open me!" */
+@keyframes wobble {
+  0%, 68%, 100% { transform: rotate(0deg); }
+  72% { transform: rotate(-3deg); }
+  76% { transform: rotate(3deg); }
+  80% { transform: rotate(-2deg); }
+  84% { transform: rotate(2deg); }
+  88% { transform: rotate(0deg); }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes seal-left {
+  to { transform: translate(-22px, 14px) rotate(-28deg); opacity: 0; }
+}
+
+@keyframes seal-right {
+  to { transform: translate(22px, 14px) rotate(28deg); opacity: 0; }
+}
+
+/* The flap belongs to the far side of the envelope: it lifts toward us, goes over
+   the top and rests leaning slightly back (195°), behind the letter. */
+@keyframes flap-open {
+  0% { transform: rotateX(0deg); z-index: 4; }
+  99% { z-index: 4; }
+  100% { transform: rotateX(195deg); z-index: 1; }
+}
+
+@keyframes shade-front {
+  from { fill: #e2a752; }
+  to { fill: #b98234; }
+}
+
+@keyframes shade-back {
+  0%, 50% { fill: #c9a466; }
+  100% { fill: #f4d39b; }
+}
+
+@keyframes letter-rise {
+  to { transform: translateY(-60%) rotate(-3deg); }
+}
+
 /* --- Scene 5: countdown card --- */
 
 .card-layout {
