@@ -85,11 +85,26 @@
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
         Toca el sobre para abrirlo
       </p>
-    </section>
 
-    <section class="scene scene--paper" data-scene="unfold" hidden>
-      <p class="scene-label">3 · La carta se desdobla</p>
-      <button class="next-button" type="button">Siguiente</button>
+      <!-- Scene 3: the letter as a sheet folded in four. unfold.js opens it. -->
+      <div class="letter-stage" aria-hidden="true" hidden>
+        <div class="sheet-mover">
+          <div class="sheet">
+            <div class="sheet-half sheet-half--top">
+              <div class="panel panel--tl"></div>
+              <div class="panel panel--tr"></div>
+            </div>
+            <div class="sheet-half sheet-half--bottom">
+              <div class="panel panel--bl"></div>
+              <div class="panel panel--br"></div>
+            </div>
+            <div class="sheet-flat"></div>
+          </div>
+          <svg class="sheet-sticker" viewBox="0 0 34 32">
+            <path d="M17 1 L21.1 11.3 L32.2 12.1 L23.7 19.2 L26.4 29.9 L17 24 L7.6 29.9 L10.3 19.2 L1.8 12.1 L12.9 11.3 Z" fill="#FFD447" stroke="#E9A83E" stroke-width="2" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+      </div>
     </section>
 
     <section class="scene scene--paper" data-scene="celebration" hidden>

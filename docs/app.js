@@ -5,6 +5,7 @@
 
 import { connectDevice } from "./device.js";
 import { openEnvelope, scatterStars } from "./envelope.js";
+import { unfoldLetter } from "./unfold.js";
 
 // Everything you may want to tweak lives here. Nothing secret.
 const CONFIG = {
@@ -20,8 +21,9 @@ const CONFIG = {
 };
 
 // The scenes, in the order the friend sees them.
-// "envelope" covers storyboard scenes 1 and 2: the envelope opens in place.
-const SCENES = ["envelope", "unfold", "celebration", "card"];
+// "envelope" covers storyboard scenes 1–3: the envelope opens and the letter
+// unfolds in place, so there is no cut between them.
+const SCENES = ["envelope", "celebration", "card"];
 
 // Length of the countdown ring's circle (2 * PI * radius 96), used to empty it.
 const RING_LENGTH = 2 * Math.PI * 96;
@@ -69,12 +71,13 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Scenes 1 → 2 → 3: one timeline, each step waits for the previous one.
+// Scenes 1 → 2 → 3 → 4: one timeline, each step waits for the previous one.
 async function openLetter() {
   envelopeButton.disabled = true; // A second tap must not restart the animation.
   await openEnvelope(envelopeScene);
   await wait(CONFIG.letterPauseMs);
-  goTo("unfold");
+  await unfoldLetter(envelopeScene);
+  goTo("celebration");
 }
 
 // --- Countdown card ---

@@ -306,6 +306,134 @@ body {
   to { transform: translateY(-60%) rotate(-3deg); }
 }
 
+/* --- Scene 3: the letter unfolds --- */
+
+/* Fixed layer over the envelope scene; unfold.js animates everything in it.
+   Rule of thumb: no opacity or filter on the preserve-3d boxes (it flattens 3D). */
+.letter-stage {
+  --sheet-h: min(620px, 72vh, 100vw);
+  --sheet-w: calc(var(--sheet-h) * 0.84);
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.sheet-mover {
+  position: relative;
+  perspective: 2600px; /* far camera: panels swing without looking stretched */
+}
+
+/* Starts folded: only the top-left quarter shows, so the sheet is shifted
+   by a quarter to keep that piece centred. */
+.sheet {
+  position: relative;
+  width: var(--sheet-w);
+  height: var(--sheet-h);
+  transform-style: preserve-3d;
+  transform: translate(25%, 25%);
+}
+
+.sheet-half {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  transform-style: preserve-3d;
+}
+
+.sheet-half--top {
+  top: 0;
+}
+
+/* Folded up over the top half, hinged on the horizontal crease. */
+.sheet-half--bottom {
+  top: 50%;
+  transform-origin: 50% 0;
+  transform: rotateX(178deg);
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 2px solid #e3d6bf;
+}
+
+.panel--tl,
+.panel--bl {
+  left: 0;
+}
+
+/* Right quarters fold over the left ones, hinged on the vertical crease.
+   179° (not 180°) keeps the stacked layers from flickering. */
+.panel--tr,
+.panel--br {
+  left: 50%;
+  transform-origin: 0 50%;
+}
+
+.panel--tr {
+  transform: rotateY(-179deg);
+}
+
+.panel--br {
+  transform: rotateY(179deg);
+}
+
+/* Soft shadows along the creases: they draw the cross once the sheet is open. */
+.panel--tl {
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 8px 0 0 0;
+  box-shadow: inset -6px -6px 10px -8px rgba(120, 95, 60, 0.35), 0 6px 14px rgba(31, 78, 99, 0.08);
+}
+
+.panel--tr {
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 0 8px 0 0;
+  box-shadow: inset 6px -6px 10px -8px rgba(120, 95, 60, 0.35), 0 6px 14px rgba(31, 78, 99, 0.08);
+}
+
+.panel--bl {
+  border-right-width: 1px;
+  border-top-width: 1px;
+  border-radius: 0 0 0 8px;
+  box-shadow: inset -6px 6px 10px -8px rgba(120, 95, 60, 0.35), 0 6px 14px rgba(31, 78, 99, 0.08);
+}
+
+.panel--br {
+  border-left-width: 1px;
+  border-top-width: 1px;
+  border-radius: 0 0 8px 0;
+  box-shadow: inset 6px 6px 10px -8px rgba(120, 95, 60, 0.35), 0 6px 14px rgba(31, 78, 99, 0.08);
+}
+
+/* Plain paper on top of the open sheet: fading it in erases the creases. */
+.sheet-flat {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: var(--paper);
+  transform: translateZ(2px);
+  opacity: 0;
+}
+
+/* The star sticker of the folded letter, on the visible quarter's corner. */
+.sheet-sticker {
+  position: absolute;
+  left: 64.8%;
+  top: 66.1%;
+  width: 7.4%;
+  overflow: visible;
+}
+
 /* --- Scene 5: countdown card --- */
 
 .card-layout {
