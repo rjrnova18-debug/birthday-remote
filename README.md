@@ -115,6 +115,12 @@ birthday-remote/
 - **Animation:** CSS keyframes, 3D transforms (`perspective`, `preserve-3d`, `backface-visibility`), and the Web Animations API to write a timeline with `await`.
 - **Git habits:** reviewing `git diff` / `git diff --staged` before every commit, Conventional Commits, one commit per step.
 
+## Credits
+
+- **Sound effects** (`docs/sfx/`): from [Pixabay](https://pixabay.com/sound-effects/), used under the [Pixabay Content License](https://pixabay.com/service/license-summary/).
+- **GIF stickers:** linked from [Tenor](https://tenor.com/).
+- **Libraries:** [MQTT.js](https://github.com/mqttjs/MQTT.js) and [canvas-confetti](https://github.com/catdad/canvas-confetti), loaded from the jsDelivr CDN.
+
 ## Possible improvements
 
 - A private broker with username and password (the public HiveMQ broker is fine for a demo, not for anything sensitive).
