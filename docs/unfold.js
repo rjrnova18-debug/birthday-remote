@@ -3,6 +3,8 @@
 // Uses the Web Animations API: every step returns a promise, so the timeline
 // below reads top to bottom like a script.
 
+import { playSound } from "./sounds.js";
+
 // CSS cannot slow down these JS animations, so "reduce motion" is honoured here:
 // every step jumps to its end.
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -55,6 +57,7 @@ export async function unfoldLetter(scene) {
   ]);
 
   // 2. The right half opens; the sheet slides so it stays centred.
+  playSound("unfold");
   play(sticker, [{ opacity: 1 }, { opacity: 0, transform: "scale(0.6)" }], { duration: 200 });
   await Promise.all([
     play(stage.querySelector(".panel--tr"), [{ transform: "rotateY(-179deg)" }, { transform: "rotateY(0deg)" }], { duration: 600 }),

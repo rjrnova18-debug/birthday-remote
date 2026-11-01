@@ -1,6 +1,8 @@
 // Scene 4: the celebration. Pure presentation: it starts the CSS entrance
 // (the .is-playing rules in style.css) and fires the confetti.
 
+import { playSound } from "./sounds.js";
+
 const CONFETTI_COLORS = ["#F7A8C4", "#B48CE8", "#C9B6F2", "#8FD3EA", "#BFE8D2", "#FFD3B6", "#FFE08A"];
 
 function wait(ms) {
@@ -24,6 +26,7 @@ export async function playCelebration(sceneElement) {
   sceneElement.classList.add("is-playing");
 
   // Two cannons from the sides, then one burst from the middle.
+  playSound("party");
   shootConfetti({ particleCount: 90, angle: 60, spread: 65, startVelocity: 55, origin: { x: 0, y: 0.75 } });
   shootConfetti({ particleCount: 90, angle: 120, spread: 65, startVelocity: 55, origin: { x: 1, y: 0.75 } });
   await wait(450);

@@ -31,6 +31,7 @@ The page **never assumes** a command worked: it sends `ON`, shows "Activando…"
 - An envelope that opens: the wax seal breaks, the flap swings up in 3D and the folded letter slides out.
 - The letter unfolds in 3D (right half, then bottom half) and grows until its paper becomes the background of the party.
 - Celebration: greetings in English, Spanish and German, a two-tier cake with an animated sparkler, confetti ([canvas-confetti](https://github.com/catdad/canvas-confetti)), balloons and GIF stickers.
+- Sound effects in sync with the animation (seal crunch, paper, unfolding, party horn), played with the Web Audio API after the first tap.
 - A countdown card (5 → 0) that activates the circuit and waits for the ESP32 to confirm. It can be closed and reopened, and closing it mid-countdown cancels it.
 - Live device status: the button reads "Conectando…" or "Circuito dormido" when the page or the ESP32 is offline.
 - Works on phones, can be used with the keyboard, and respects the system's *reduce motion* setting.
@@ -80,7 +81,9 @@ birthday-remote/
 │   ├── device.js            ← everything MQTT: connects, remembers what the ESP32 said
 │   ├── envelope.js          ← envelope scene: stars and opening animation
 │   ├── unfold.js            ← 3D unfolding letter (Web Animations API)
-│   └── celebration.js       ← celebration entrance and confetti
+│   ├── celebration.js       ← celebration entrance and confetti
+│   ├── sounds.js            ← loads the sound effects and plays them on cue
+│   └── sfx/                 ← the sound files (mp3)
 └── firmware/                ← ESP32 (PlatformIO)
     ├── platformio.ini
     ├── include/

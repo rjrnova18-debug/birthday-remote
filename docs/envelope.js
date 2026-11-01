@@ -2,6 +2,8 @@
 // Pure presentation: it only adds CSS classes and waits for animations to end.
 // The timing of each step lives in style.css (the .is-opening rules).
 
+import { playSound } from "./sounds.js";
+
 const STAR_PATH = "M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z";
 
 // Twinkling stars: position in % of the scene, size in px, delay in s.
@@ -23,12 +25,13 @@ export function scatterStars(container) {
   ).join("");
 }
 
-// Resolves when the CSS animation called `name` finishes on `element`.
-export function animationEnd(element, name) {
+// Resolves when the CSS animation called `name` fires `type` on `element`
+// ("animationstart" after its delay, or "animationend").
+function animationEvent(element, type, name) {
   return new Promise((resolve) => {
-    element.addEventListener("animationend", function onEnd(event) {
+    element.addEventListener(type, function onEvent(event) {
       if (event.animationName === name) {
-        element.removeEventListener("animationend", onEnd);
+        element.removeEventListener(type, onEvent);
         resolve();
       }
     });
@@ -36,7 +39,16 @@ export function animationEnd(element, name) {
 }
 
 // Seal breaks → flap swings open → the folded letter rises. Resolves at the end.
+// The sounds follow the CSS timing: the letter's sound waits for its animation
+// to really start, so changing the delay in style.css keeps them in sync.
 export async function openEnvelope(sceneElement) {
+  const letter = sceneElement.querySelector(".env-letter");
+  const letterStarts = animationEvent(letter, "animationstart", "letter-rise");
+  const letterEnds = animationEvent(letter, "animationend", "letter-rise");
+
   sceneElement.classList.add("is-opening");
-  await animationEnd(sceneElement.querySelector(".env-letter"), "letter-rise");
+  playSound("seal");
+  await letterStarts;
+  playSound("letter");
+  await letterEnds;
 }

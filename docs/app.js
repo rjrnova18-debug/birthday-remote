@@ -7,6 +7,7 @@ import { connectDevice } from "./device.js";
 import { openEnvelope, scatterStars } from "./envelope.js";
 import { unfoldLetter } from "./unfold.js";
 import { playCelebration } from "./celebration.js";
+import { loadSounds, unlockSounds } from "./sounds.js";
 
 // Everything you may want to tweak lives here. Nothing secret.
 const CONFIG = {
@@ -76,6 +77,7 @@ function wait(ms) {
 // Scenes 1 → 2 → 3: one timeline, each step waits for the previous one.
 async function openLetter() {
   envelopeButton.disabled = true; // A second tap must not restart the animation.
+  unlockSounds(); // Still inside the tap, before the first await.
   await openEnvelope(envelopeScene);
   await wait(CONFIG.letterPauseMs);
   await unfoldLetter(envelopeScene);
@@ -224,6 +226,7 @@ for (const image of document.querySelectorAll("[data-gif]")) {
 }
 
 scatterStars(envelopeScene.querySelector(".stars"));
+loadSounds();
 envelopeButton.addEventListener("click", openLetter);
 
 activateButton.addEventListener("click", startCountdown);
