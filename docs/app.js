@@ -8,6 +8,7 @@ import { openEnvelope, scatterStars } from "./envelope.js";
 import { unfoldLetter } from "./unfold.js";
 import { playCelebration } from "./celebration.js";
 import { loadSounds, unlockSounds } from "./sounds.js";
+import { loadCat, startCat, stopCat } from "./cat.js";
 
 // Everything you may want to tweak lives here. Nothing secret.
 const CONFIG = {
@@ -43,6 +44,7 @@ const celebrationScene = document.querySelector('[data-scene="celebration"]');
 const cardOverlay = document.querySelector(".card-overlay");
 const closeCardButton = document.getElementById("card-close");
 const reopenCardButton = document.getElementById("card-reopen");
+const catSticker = cardOverlay.querySelector('[data-gif="sticker"]');
 const envelopeButton = document.getElementById("envelope-button");
 const activateButton = document.getElementById("activate-button");
 const cancelButton = document.getElementById("cancel-button");
@@ -97,6 +99,7 @@ function openCard() {
   cardShown = true;
   render();
   closeCardButton.focus();
+  startCat(catSticker); // Every time the card opens, the cat sings its first spins.
 }
 
 // Closing in the middle of the countdown cancels it: the circuit must never
@@ -107,6 +110,7 @@ function closeCard() {
     cardState = "idle";
   }
   cardShown = false;
+  stopCat();
   render();
   reopenCardButton.focus();
 }
@@ -227,6 +231,7 @@ for (const image of document.querySelectorAll("[data-gif]")) {
 
 scatterStars(envelopeScene.querySelector(".stars"));
 loadSounds();
+loadCat(CONFIG.gifs.sticker);
 envelopeButton.addEventListener("click", openLetter);
 
 activateButton.addEventListener("click", startCountdown);
