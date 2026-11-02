@@ -1,11 +1,15 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include "secrets.h"
+#include "melody.h"
 #include <PubSubClient.h>
 
 constexpr char MQTT_BROKER[] = "broker.hivemq.com";
 constexpr uint16_t MQTT_PORT = 1883;
 constexpr uint8_t LED_PIN = LED_BUILTIN;
+constexpr uint8_t BUZZER_PIN = 25;
+constexpr uint8_t LED_PINS[] = {26, 27, 32, 33}; // yellow, green, red, blue
+constexpr uint16_t NOTE_GAP_MS = 30;             // so two equal notes sound as two
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -26,6 +30,31 @@ void connectToWiFi()
   Serial.println();
   Serial.print("Connected! IP address: ");
   Serial.println(WiFi.localIP());
+}
+
+void testHardware()
+{
+  for (uint8_t pin : LED_PINS)
+  {
+    digitalWrite(pin, HIGH);
+    delay(200);
+    digitalWrite(pin, LOW);
+  }
+  tone(BUZZER_PIN, NOTE_C5);
+  delay(150);
+  noTone(BUZZER_PIN);
+}
+
+// Step 3A on purpose: this blocks loop() for the whole song (~12 s).
+void playMelodyBlocking()
+{
+  for (const Note &note : HAPPY_BIRTHDAY)
+  {
+    tone(BUZZER_PIN, note.frequencyHz);
+    delay(note.durationMs - NOTE_GAP_MS);
+    noTone(BUZZER_PIN);
+    delay(NOTE_GAP_MS);
+  }
 }
 
 void publishLedState()
@@ -52,6 +81,8 @@ void onMessage(char *topic, byte *payload, unsigned int length)
   if (message == "ON")
   {
     setLed(true);
+    playMelodyBlocking();
+    setLed(false);
   }
   else if (message == "OFF")
   {
@@ -81,10 +112,28 @@ void connectToMqtt()
   }
 }
 
+// Temporary diagnostic: prints once per second while loop() keeps running.
+void printHeartbeat()
+{
+  static unsigned long lastBeatMs = 0;
+  if (millis() - lastBeatMs >= 1000)
+  {
+    lastBeatMs = millis();
+    Serial.printf("loop alive at %lu ms\n", lastBeatMs);
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  for (uint8_t pin : LED_PINS)
+  {
+    pinMode(pin, OUTPUT);
+  }
+
+  testHardware();
 
   connectToWiFi();
 
@@ -99,4 +148,5 @@ void loop()
     connectToMqtt();
   }
   mqttClient.loop();
+  printHeartbeat();
 }
