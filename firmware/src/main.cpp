@@ -2,17 +2,19 @@
 #include <WiFi.h>
 #include "secrets.h"
 #include "melody.h"
+#include "Led.h"
 #include <PubSubClient.h>
 
 constexpr char MQTT_BROKER[] = "broker.hivemq.com";
 constexpr uint16_t MQTT_PORT = 1883;
 constexpr uint8_t LED_PIN = LED_BUILTIN;
 constexpr uint8_t BUZZER_PIN = 25;
-constexpr uint8_t LED_PINS[] = {26, 27, 32, 33}; // yellow, green, red, blue
-constexpr uint16_t NOTE_GAP_MS = 30;             // so two equal notes sound as two
+constexpr uint16_t NOTE_GAP_MS = 30; // so two equal notes sound as two
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
+Led leds[] = {Led(26), Led(27), Led(32), Led(33)}; // yellow, green, red, blue
+
 bool ledIsOn = false;
 
 void connectToWiFi()
@@ -34,11 +36,11 @@ void connectToWiFi()
 
 void testHardware()
 {
-  for (uint8_t pin : LED_PINS)
+  for (Led &led : leds)
   {
-    digitalWrite(pin, HIGH);
+    led.turnOn();
     delay(200);
-    digitalWrite(pin, LOW);
+    led.turnOff();
   }
   tone(BUZZER_PIN, NOTE_C5);
   delay(150);
@@ -128,9 +130,9 @@ void setup()
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
   pinMode(BUZZER_PIN, OUTPUT);
-  for (uint8_t pin : LED_PINS)
+  for (Led &led : leds)
   {
-    pinMode(pin, OUTPUT);
+    led.begin();
   }
 
   testHardware();
