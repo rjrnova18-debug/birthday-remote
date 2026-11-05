@@ -29,6 +29,15 @@ bool MelodyPlayer::isPlaying() const
   return state_ != State::Idle;
 }
 
+uint16_t MelodyPlayer::currentFrequency() const
+{
+  if (state_ == State::Sounding)
+  {
+    return notes_[noteIndex_].frequencyHz;
+  }
+  return 0;
+}
+
 void MelodyPlayer::update()
 {
   unsigned long elapsed = millis() - stateStartMs_;

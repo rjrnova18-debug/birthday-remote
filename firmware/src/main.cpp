@@ -4,6 +4,8 @@
 #include "melody.h"
 #include "Led.h"
 #include "MelodyPlayer.h"
+#include "LightShow.h"
+#include "finale.h"
 #include <PubSubClient.h>
 
 constexpr char MQTT_BROKER[] = "broker.hivemq.com";
@@ -15,6 +17,17 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 Led leds[] = {Led(26), Led(27), Led(32), Led(33)}; // yellow, green, red, blue
 MelodyPlayer player(BUZZER_PIN);
+constexpr size_t LED_COUNT = sizeof(leds) / sizeof(leds[0]);
+LightShow lights(leds, LED_COUNT);
+
+// The whole show, from the ON to the end: first the song, then the finale.
+enum class Show
+{
+  Off,
+  Song,
+  Finale
+};
+Show show = Show::Off;
 
 bool ledIsOn = false;
 
@@ -71,15 +84,18 @@ void onMessage(char *topic, byte *payload, unsigned int length)
 
   if (message == "ON")
   {
-    if (!player.isPlaying())
+    if (show == Show::Off)
     {
       player.start(HAPPY_BIRTHDAY, HAPPY_BIRTHDAY_LENGTH);
+      show = Show::Song;
       setLed(true);
     }
   }
   else if (message == "OFF")
   {
     player.stop();
+    lights.stop();
+    show = Show::Off;
     setLed(false);
   }
 }
@@ -117,6 +133,63 @@ void printHeartbeat()
   }
 }
 
+// Which LED shows this pitch: 0 = lowest band ... 3 = highest, -1 = silence.
+// Each limit sits halfway between the top note of one band and the bottom note of the next.
+int ledIndexForFrequency(uint16_t frequencyHz)
+{
+  if (frequencyHz == 0)
+  {
+    return -1; // silence: no LED
+  }
+  else if (frequencyHz < (NOTE_A4 + NOTE_B4) / 2)
+  {
+    return 0; // yellow: G4, A4
+  }
+  else if (frequencyHz < (NOTE_C5 + NOTE_D5) / 2)
+  {
+    return 1; // green: B4, C5
+  }
+  else if (frequencyHz < (NOTE_E5 + NOTE_F5) / 2)
+  {
+    return 2; // red: D5, E5
+  }
+  return 3; // blue: F5, G5
+}
+
+// The LED mask for the note playing now: one bit for its band, none in silence.
+uint8_t maskForCurrentNote()
+{
+  int index = ledIndexForFrequency(player.currentFrequency());
+  return index >= 0 ? (1 << index) : NO_LEDS;
+}
+
+// Moves the show forward: the LEDs follow the notes, then the finale, then OFF.
+void updateShow()
+{
+  switch (show)
+  {
+  case Show::Off:
+    break;
+
+  case Show::Song:
+    lights.show(maskForCurrentNote());
+    if (!player.isPlaying())
+    {
+      lights.start(FINALE, FINALE_LENGTH);
+      show = Show::Finale;
+    }
+    break;
+
+  case Show::Finale:
+    if (!lights.isPlaying())
+    {
+      show = Show::Off;
+      setLed(false);
+    }
+    break;
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -143,12 +216,7 @@ void loop()
   }
   mqttClient.loop();
   player.update();
-
-  // The song ended on its own: tell the page the show is over.
-  if (ledIsOn && !player.isPlaying())
-  {
-    setLed(false);
-  }
-
+  lights.update();
+  updateShow();
   printHeartbeat();
 }
