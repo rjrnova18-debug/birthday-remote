@@ -55,3 +55,5 @@ constexpr Note HAPPY_BIRTHDAY[] = {
     {NOTE_D5, QUARTER},
     {NOTE_C5, DOTTED_HALF},
 };
+
+constexpr size_t HAPPY_BIRTHDAY_LENGTH = sizeof(HAPPY_BIRTHDAY) / sizeof(HAPPY_BIRTHDAY[0]);

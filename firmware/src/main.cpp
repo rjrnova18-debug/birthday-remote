@@ -3,17 +3,18 @@
 #include "secrets.h"
 #include "melody.h"
 #include "Led.h"
+#include "MelodyPlayer.h"
 #include <PubSubClient.h>
 
 constexpr char MQTT_BROKER[] = "broker.hivemq.com";
 constexpr uint16_t MQTT_PORT = 1883;
 constexpr uint8_t LED_PIN = LED_BUILTIN;
 constexpr uint8_t BUZZER_PIN = 25;
-constexpr uint16_t NOTE_GAP_MS = 30; // so two equal notes sound as two
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 Led leds[] = {Led(26), Led(27), Led(32), Led(33)}; // yellow, green, red, blue
+MelodyPlayer player(BUZZER_PIN);
 
 bool ledIsOn = false;
 
@@ -47,18 +48,6 @@ void testHardware()
   noTone(BUZZER_PIN);
 }
 
-// Step 3A on purpose: this blocks loop() for the whole song (~12 s).
-void playMelodyBlocking()
-{
-  for (const Note &note : HAPPY_BIRTHDAY)
-  {
-    tone(BUZZER_PIN, note.frequencyHz);
-    delay(note.durationMs - NOTE_GAP_MS);
-    noTone(BUZZER_PIN);
-    delay(NOTE_GAP_MS);
-  }
-}
-
 void publishLedState()
 {
   mqttClient.publish(MQTT_TOPIC_STATE, ledIsOn ? "ON" : "OFF", true);
@@ -82,12 +71,15 @@ void onMessage(char *topic, byte *payload, unsigned int length)
 
   if (message == "ON")
   {
-    setLed(true);
-    playMelodyBlocking();
-    setLed(false);
+    if (!player.isPlaying())
+    {
+      player.start(HAPPY_BIRTHDAY, HAPPY_BIRTHDAY_LENGTH);
+      setLed(true);
+    }
   }
   else if (message == "OFF")
   {
+    player.stop();
     setLed(false);
   }
 }
@@ -129,7 +121,7 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
-  pinMode(BUZZER_PIN, OUTPUT);
+  player.begin();
   for (Led &led : leds)
   {
     led.begin();
@@ -150,5 +142,13 @@ void loop()
     connectToMqtt();
   }
   mqttClient.loop();
+  player.update();
+
+  // The song ended on its own: tell the page the show is over.
+  if (ledIsOn && !player.isPlaying())
+  {
+    setLed(false);
+  }
+
   printHeartbeat();
 }
