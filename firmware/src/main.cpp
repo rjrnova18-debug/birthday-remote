@@ -122,17 +122,6 @@ void connectToMqtt()
   }
 }
 
-// Temporary diagnostic: prints once per second while loop() keeps running.
-void printHeartbeat()
-{
-  static unsigned long lastBeatMs = 0;
-  if (millis() - lastBeatMs >= 1000)
-  {
-    lastBeatMs = millis();
-    Serial.printf("loop alive at %lu ms\n", lastBeatMs);
-  }
-}
-
 // Which LED shows this pitch: 0 = lowest band ... 3 = highest, -1 = silence.
 // Each limit sits halfway between the top note of one band and the bottom note of the next.
 int ledIndexForFrequency(uint16_t frequencyHz)
@@ -218,5 +207,4 @@ void loop()
   player.update();
   lights.update();
   updateShow();
-  printHeartbeat();
 }
