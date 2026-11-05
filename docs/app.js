@@ -14,7 +14,7 @@ import { loadCat, startCat, stopCat } from "./cat.js";
 const CONFIG = {
   brokerUrl: "wss://broker.hivemq.com:8884/mqtt",
   defaultName: "amigo",
-  countdownSeconds: 5,
+  countdownSeconds: 3,
   confirmTimeoutMs: 5000, // How long to wait for the ESP32 to confirm the ON.
   gifs: {
     dance: "https://media.tenor.com/ezk10TtQiCUAAAAj/club-penguin-club-penguin-dance.gif",

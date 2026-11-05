@@ -32,8 +32,8 @@ The page **never assumes** a command worked: it sends `ON`, shows "Activando…"
 - The letter unfolds in 3D (right half, then bottom half) and grows until its paper becomes the background of the party.
 - Celebration: greetings in English, Spanish and German, a two-tier cake with an animated sparkler, confetti ([canvas-confetti](https://github.com/catdad/canvas-confetti)), balloons and GIF stickers.
 - Sound effects in sync with the animation (seal crunch, paper, unfolding, party horn), played with the Web Audio API after the first tap.
-- The OIIA cat next to the card sings on its first three spins: the GIF is restarted when the card opens and the sounds are scheduled from its frame timing.
-- A countdown card (5 → 0) that activates the circuit and waits for the ESP32 to confirm. It can be closed and reopened, and closing it mid-countdown cancels it.
+- The OIIA cat next to the card sings on its first two spins: the GIF is restarted when the card opens and the sounds are scheduled from its frame timing.
+- A countdown card (3 → 0) that activates the circuit and waits for the ESP32 to confirm. It can be closed and reopened, and closing it mid-countdown cancels it.
 - Live device status: the button reads "Conectando…" or "Circuito dormido" when the page or the ESP32 is offline.
 - Works on phones, can be used with the keyboard, and respects the system's *reduce motion* setting.
 

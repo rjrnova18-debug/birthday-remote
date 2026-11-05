@@ -8,7 +8,7 @@ import { playSound } from "./sounds.js";
 // and the whole loop lasts 3.48 s.
 const SPIN_STARTS_AT = 1.69;
 const LOOP_SECONDS = 3.48;
-const SPINS_WITH_SOUND = 3; // After these, the cat keeps spinning in silence.
+const SPINS_WITH_SOUND = 2; // After these, the cat keeps spinning in silence.
 
 let gifBlob = null;
 let cancelSounds = [];
